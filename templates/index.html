@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Simple chat app</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>This is a stupid simple chat app</h1>
+    <!-- <form action="/action_page.php">
+        First name:<br>
+        <input type="text" name="firstname" value="Mickey"><br>
+        Last name:<br>
+        <input type="text" name="lastname" value="Mouse"><br><br>
+        <input type="submit" value="Submit">
+      </form>  -->
+
+    <input type="text" id="user" placeholder="user"><br>
+    <!-- <input type="text" id="text" placeholder="Input your text here"> -->
+    <textarea id="text" cols="30" rows="2" placeholder="insert chat here"></textarea><br>
+    <button id="send">Send message</button><br>
+
+    <!-- how do i have a list of chats here -->
+    <p>here are the chats</p>
+    <textarea id="chat_list" cols="30" rows="10"></textarea>
+</body>
+<script>
+    $(document).ready(function(){
+        var socket = io.connect('http://localhost:5000')
+        
+        // if send
+        $('#send').on('click', function(){
+            var user = $('#user').val()
+            var text = $('#text').val()
+            socket.emit('new chat', {
+                user: user,
+                text: text
+            })
+            $('#text').val('')
+        })
+        
+        socket.on('update chat', function(raw_msg) {
+            // $('.sync').val(msg.data)
+            $('#chat_list').val(raw_msg)
+        });
+    });
+</script>
+
+</html>
